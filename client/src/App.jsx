@@ -4,6 +4,8 @@ import Dashboard from "./pages/Dashboard"
 import Login from "./pages/Login"
 import SignUp from "./pages/SignUp"
 import { Toaster } from "react-hot-toast"
+import AllProjects from "./pages/AllProjects"
+import Project from "./pages/Project"
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route path="/register" element={<SignUp />} />
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
+            <Route path="projects" element={<AllProjects />} />
+            <Route path="project/:projectId" element={<Project />} />
           </Route>
         </Routes>
       </BrowserRouter>

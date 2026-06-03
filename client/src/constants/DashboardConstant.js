@@ -1,5 +1,5 @@
 import { BsRobot } from "react-icons/bs";
-import { LuComputer, LuLayoutDashboard, LuUser, LuWallet } from "react-icons/lu";
+import { LuClipboardList, LuComputer, LuLayoutDashboard, LuUser, LuWallet } from "react-icons/lu";
 
 export const sideNav = [
     {
@@ -23,8 +23,27 @@ export const sideNav = [
         path: '/dashboard/interviewPrep'
     },
     {
-        title: 'Account Details',
-        icon: LuUser,
-        path: '/dashboard/account-details'
+        title: 'Your Projects',
+        icon: LuClipboardList,
+        path: '/dashboard/projects'
     }
 ];
+
+export const projects = [
+    {
+        _id: 1,
+        name: "Agentify",
+        githubUrl: "https://github.com/ShikharJoshi98/Agentify",
+
+    }
+]
+
+export const colors = [
+    "bg-yellow-100",
+    "bg-blue-100",
+    "bg-green-100",
+    "bg-pink-100",
+    "bg-purple-100",
+    "bg-orange-100",
+    "bg-cyan-100"
+]
