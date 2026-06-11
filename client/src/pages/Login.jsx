@@ -1,14 +1,31 @@
-import { useState } from "react";
-import { LuArrowRight, LuLock, LuMail, LuUser } from "react-icons/lu";
+import { useEffect, useState } from "react";
+import { LuArrowRight, LuLoader, LuLock, LuMail, LuUser } from "react-icons/lu";
 import Input from "../components/Input";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { clearAuthState, loginRequest } from "../features/auth/authAction";
+import toast from "react-hot-toast";
 
 function Login() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { loading, message, error } = useSelector(state => state.auth.login);
     const [loginData, setLoginData] = useState({
         email: "",
         password: ""
     });
+
+    useEffect(() => {
+        if (message) {
+            toast.success(message);
+            navigate("/dashboard");
+            dispatch(clearAuthState());
+        }
+        if (error) {
+            toast.error(error);
+            dispatch(clearAuthState());
+        }
+    }, [message, error]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -18,9 +35,9 @@ function Login() {
             [name]: value
         }));
     }
-
     const handleSubmit = (e) => {
         e.preventDefault();
+        dispatch(loginRequest(loginData));
     }
 
     return (
@@ -61,7 +78,11 @@ function Login() {
                             type="submit"
                             className="w-full mt-2 py-2.5 px-4 bg-linear-to-r from-blue-500 to-cyan-600 hover:from-blue-400 hover:to-cyan-500 text-white font-medium rounded-xl text-sm transition-all shadow-lg shadow-indigo-500/10 active:scale-[0.99] disabled:opacity-60 flex items-center justify-center gap-2 cursor-pointer"
                         >
-                            Sign In <LuArrowRight className="size-4" />
+                            {loading ?
+                                <LuLoader className="mx-auto animate-spin size-5" />
+                                :
+                                <>Login <LuArrowRight className="size-4" /></>
+                            }
                         </button>
                     </form>
 

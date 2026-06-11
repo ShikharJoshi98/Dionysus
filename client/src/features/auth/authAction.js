@@ -21,6 +21,27 @@ export const registerFailure = (error) => {
     }
 }
 
+export const loginRequest = (credentials) => {
+    return {
+        type: authTypes.LOGIN_REQUEST,
+        payload: credentials
+    }
+}
+
+export const loginSuccess = (data) => {
+    return {
+        type: authTypes.LOGIN_SUCCESS,
+        payload: data
+    }
+}
+
+export const loginFailure = (error) => {
+    return {
+        type: authTypes.LOGIN_FAILURE,
+        payload: error
+    }
+}
+
 export const clearAuthState = () => {
     return {
         type: authTypes.CLEAR_AUTH_STATE
