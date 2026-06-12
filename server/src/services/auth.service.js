@@ -1,6 +1,6 @@
 const User = require("../models/user.model");
 const AppError = require("../utils/error");
-const { generateAccessToken, generateRefreshToken } = require("../utils/generateToken");
+const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require("../utils/generateToken");
 const STATUS_CODE = require("../utils/statusCode");
 
 const createUser = async (data) => {
@@ -56,9 +56,60 @@ const loginUser = async (data) => {
         }
         throw new AppError("Error login user", STATUS_CODE.INTERNAL_SERVER_ERROR);
     }
+}
+
+const findUser = async (id) => {
+    try {
+        if (!id) {
+            throw new AppError("Invalid user id", STATUS_CODE.UNAUTHORIZED);
+        }
+        const user = await User.findById(id);
+
+        if (!user) {
+            throw new AppError("User not found", STATUS_CODE.UNAUTHORIZED);
+        }
+
+        return user;
+    } catch (error) {
+        if (error.name === "CastError") {
+            throw new AppError("Invalid user id", STATUS_CODE.UNAUTHORIZED);
+        }
+        if (error instanceof AppError) {
+            throw error;
+        }
+        throw new AppError("Error finding user", STATUS_CODE.INTERNAL_SERVER_ERROR);
+    }
+}
+
+const refreshAccessToken = async (refreshToken) => {
+    try {
+        if (!refreshToken) {
+            throw new AppError("Refresh token missing", STATUS_CODE.UNAUTHORIZED);
+        }
+
+        const decoded = verifyRefreshToken(refreshToken);
+
+        const user = await User.findById(decoded.userId);
+
+        if (!user) {
+            throw new AppError("User not found", STATUS_CODE.UNAUTHORIZED);
+        }
+
+        const newAccessToken = generateAccessToken(user._id);
+
+        return newAccessToken;
+    } catch (error) {
+        if (error instanceof AppError) {
+            throw error;
+        }
+
+        throw new AppError("Invalid or expired refresh token", STATUS_CODE.UNAUTHORIZED);
+    }
 };
 
 module.exports = {
     createUser,
-    loginUser
+    loginUser,
+    findUser,
+    refreshAccessToken
 }

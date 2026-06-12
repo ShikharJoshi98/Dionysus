@@ -11,8 +11,14 @@ const initialState = {
         error: null,
         message: null
     },
+    checkAuth: {
+        loading: false,
+        error: null,
+        message: null
+    },
     user: null,
-    isAuthenticated: false
+    isAuthenticated: false,
+    authChecked: false
 };
 
 export const authReducer = (state = initialState, action) => {
@@ -75,6 +81,39 @@ export const authReducer = (state = initialState, action) => {
                 user: null,
                 isAuthenticated: false
             };
+        case authTypes.CHECK_AUTH_REQUEST:
+            return {
+                ...state,
+                checkAuth: {
+                    loading: true,
+                    error: null,
+                    message: null
+                }
+            }
+        case authTypes.CHECK_AUTH_SUCCESS:
+            return {
+                ...state,
+                user: action.payload.data,
+                checkAuth: {
+                    loading: false,
+                    error: null,
+                    message: null
+                },
+                isAuthenticated: true,
+                authChecked: true
+            }
+        case authTypes.CHECK_AUTH_FAILURE:
+            return {
+                ...state,
+                user: null,
+                checkAuth: {
+                    loading: false,
+                    error: null,
+                    message: null
+                },
+                isAuthenticated: false,
+                authChecked: true
+            }
         case authTypes.CLEAR_AUTH_STATE:
             return {
                 ...state,
@@ -84,6 +123,11 @@ export const authReducer = (state = initialState, action) => {
                     message: null
                 },
                 login: {
+                    loading: false,
+                    error: null,
+                    message: null
+                },
+                checkAuth: {
                     loading: false,
                     error: null,
                     message: null

@@ -42,6 +42,26 @@ export const loginFailure = (error) => {
     }
 }
 
+export const checkAuthRequest = () => {
+    return {
+        type: authTypes.CHECK_AUTH_REQUEST
+    }
+}
+
+export const checkAuthSuccess = (data) => {
+    return {
+        type: authTypes.CHECK_AUTH_SUCCESS,
+        payload: data
+    }
+}
+
+export const checkAuthFailure = (error) => {
+    return {
+        type: authTypes.CHECK_AUTH_FAILURE,
+        payload: error
+    }
+}
+
 export const clearAuthState = () => {
     return {
         type: authTypes.CLEAR_AUTH_STATE

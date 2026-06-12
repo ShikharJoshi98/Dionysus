@@ -43,7 +43,49 @@ const login = async (req, res, next) => {
     }
 }
 
+const checkAuth = async (req, res, next) => {
+    try {
+        const user = req.user;
+        
+        successResponse(res, user, "User Authenticated", STATUS_CODE.OK);
+    } catch (error) {
+        next(error);
+    }
+}
+
+const logout = async (req, res, next) => {
+    try {
+        res.clearCookie("refreshToken", { path: "/" });
+        res.clearCookie("accessToken", { path: "/" });
+        successResponse(res, {}, "Logged out successfully", STATUS_CODE.OK);
+    } catch (error) {
+         next(error);
+    }
+}
+
+const refreshAccessTokenController = async (req, res, next) => {
+    try {
+        const refreshToken = req.cookies.refreshToken;
+        const newAccessToken = await authService.refreshAccessToken(refreshToken);
+        const accessCookieOptions = {
+            httpOnly: true,
+            secure: serverConfig.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 30 * 60 * 1000
+        };
+
+        res.cookie("accessToken", newAccessToken, accessCookieOptions);
+
+        successResponse(res, {}, "Generated new access token", STATUS_CODE.CREATED);
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     register,
-    login
+    login,
+    checkAuth,
+    logout,
+    refreshAccessTokenController
 }

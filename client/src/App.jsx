@@ -6,8 +6,19 @@ import SignUp from "./pages/SignUp"
 import { Toaster } from "react-hot-toast"
 import AllProjects from "./pages/AllProjects"
 import Project from "./pages/Project"
+import { useDispatch } from "react-redux"
+import { useEffect } from "react"
+import { checkAuthRequest } from "./features/auth/authAction"
+import PublicRoute from "./guards/PublicRoute"
+import ProtectedRoute from "./guards/ProtectedRoute"
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(checkAuthRequest());
+  }, [dispatch])
+
   return (
     <>
       <Toaster
@@ -16,9 +27,9 @@ function App() {
       />
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<SignUp />} />
-          <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+          <Route path="/register" element={<PublicRoute><SignUp /></PublicRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
             <Route index element={<Dashboard />} />
             <Route path="projects" element={<AllProjects />} />
             <Route path="project/:projectId" element={<Project />} />

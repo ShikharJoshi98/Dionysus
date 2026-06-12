@@ -7,3 +7,7 @@ export const registerUser = (credentials) => {
 export const loginUser = (credentials) => {
     return post("/auth/login", credentials);
 }
+
+export const checkAuth = () => {
+    return post("/auth/checkAuth");
+}
