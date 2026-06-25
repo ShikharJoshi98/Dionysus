@@ -11,6 +11,11 @@ const initialState = {
         error: null,
         message: null
     },
+    logout: {
+        loading: false,
+        error: null,
+        message: null
+    },
     checkAuth: {
         loading: false,
         error: null,
@@ -70,7 +75,7 @@ export const authReducer = (state = initialState, action) => {
                     message: action.payload.message
                 }
             };
-        case authTypes.REGISTER_FAILURE:
+        case authTypes.LOGIN_FAILURE:
             return {
                 ...state,
                 login: {
@@ -80,6 +85,34 @@ export const authReducer = (state = initialState, action) => {
                 },
                 user: null,
                 isAuthenticated: false
+            };
+        case authTypes.LOGOUT_REQUEST:
+            return {
+                ...state,
+                logout: {
+                    loading: true,
+                    error: null,
+                    message: null
+                }
+            };
+        case authTypes.LOGOUT_SUCCESS:
+            return {
+                ...state,
+                isAuthenticated: false,
+                logout: {
+                    loading: false,
+                    error: null,
+                    message: action.payload.message
+                }
+            };
+        case authTypes.LOGOUT_FAILURE:
+            return {
+                ...state,
+                logout: {
+                    loading: false,
+                    error: action.payload,
+                    message: null
+                },
             };
         case authTypes.CHECK_AUTH_REQUEST:
             return {

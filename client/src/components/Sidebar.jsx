@@ -3,8 +3,11 @@ import { LuChevronLeft, LuChevronRight, LuLogOut } from "react-icons/lu";
 import { IoDiamond } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { sideNav } from "../constants/DashboardConstant";
+import { useDispatch } from "react-redux";
+import { logoutRequest } from "../features/auth/authAction";
 
 function Sidebar() {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isSideNav, setSideNav] = useState(true);
 

@@ -8,6 +8,10 @@ export const loginUser = (credentials) => {
     return post("/auth/login", credentials);
 }
 
+export const logoutUser = () => {
+    return post("/auth/logout");
+}
+
 export const checkAuth = () => {
     return post("/auth/checkAuth");
 }

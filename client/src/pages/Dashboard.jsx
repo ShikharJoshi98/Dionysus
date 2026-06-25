@@ -1,15 +1,30 @@
-import { LuGithub, LuKey } from "react-icons/lu"
+import { LuGithub, LuKey, LuLoader } from "react-icons/lu"
 import Input from "../components/Input"
 import { IoDocumentTextOutline } from "react-icons/io5"
 import Button from "../components/Button"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { clearProjectState, createProjectRequest } from "../features/project/projectAction"
+import toast from "react-hot-toast"
 
 function Dashboard() {
+    const dispatch = useDispatch();
+    const { loading, message, error } = useSelector(state => state.project.createProject);
     const [projectData, setProjectData] = useState({
         projectName: "",
         projectUrl: "",
         githubToken: ""
     });
+    useEffect(() => {
+        if (message) {
+            toast.success(message);
+            dispatch(clearProjectState());
+        }
+        if (error) {
+            toast.error(error);
+            dispatch(clearProjectState());
+        }
+    }, [message, error]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -20,7 +35,7 @@ function Dashboard() {
     }
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(projectData);
+        dispatch(createProjectRequest(projectData));
     }
     return (
         <main className="p-6">
@@ -35,9 +50,16 @@ function Dashboard() {
                         <Input icon={IoDocumentTextOutline} placeholder="Project Name" name="projectName" value={projectData.projectName} onChange={handleChange} />
                         <Input icon={LuGithub} placeholder="Github Repository URL" name="projectUrl" value={projectData.projectUrl} onChange={handleChange} />
                         <Input icon={LuKey} placeholder="Github Token (optional, for private repositories)" name="githubToken" value={projectData.githubToken} onChange={handleChange} />
-                        <div className="mt-2">
-                            <Button text="Check Credits" />
-                        </div>
+                        <button
+                            type="submit"
+                            className="w-full mt-2 py-2.5 px-4 bg-linear-to-r from-blue-500 to-cyan-600 hover:from-blue-400 hover:to-cyan-500 text-white font-medium rounded-xl text-sm transition-all shadow-lg shadow-indigo-500/10 active:scale-[0.99] disabled:opacity-60 flex items-center justify-center gap-2 cursor-pointer"
+                        >
+                            {loading ?
+                                <LuLoader className="mx-auto animate-spin size-5" />
+                                :
+                                <>Create Project</>
+                            }
+                        </button>
                     </form>
                 </div>
             </div>
